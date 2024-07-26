@@ -1,31 +1,37 @@
 using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc; // to extends with `: Controller` and IActionResult
 using MvcMovie.Models;
 
-namespace MvcMovie.Controllers;
-
-public class HomeController : Controller
+// to organize HomeController to MvcMovie.Controllers
+namespace MvcMovie.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    // Controller: A base class for an MVC controller with view support
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        // ILogger is used for loggin purpose
+        // define private _logger to be override when the HomeController
+        // Constructor is called
+        private readonly ILogger<HomeController> _logger;
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        public HomeController(ILogger<HomeController> logger)
+        {
+            _logger = logger;
+        }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
+        public IActionResult Index()
+        {
+            return View();
+        }
 
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(
+                new ErrorViewModel
+                {
+                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+                }
+            );
+        }
     }
 }
