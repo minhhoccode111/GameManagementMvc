@@ -1,3 +1,4 @@
+<!-- extract the movieGenreVM type MovieGenreViewModel is being passed to the view? -->
 @model MvcMovie.Models.MovieGenreViewModel
 
 @{
@@ -10,13 +11,18 @@ ViewData["Title"] = "Index";
     <a asp-action="Create">Create New</a>
 </p>
 
+<!--filter form will make a get request to this current route-->
 <form asp-controller="Movies" asp-action="Index" method="get">
     <p class="">
+        <!--asp-for: MovieGenre is used for the key in search query-->
+        <!--asp-items: automatically generate a list of option of genres to select-->
         <select asp-for="MovieGenre" asp-items="Model.Genres">
             <option value="">All</option>
         </select>
 
+        <!--name: SearchString is used for the key in search query-->
         Title: <input type="text" name="SearchString">
+        <!--value: Filter is just the text-->
         <input type="submit" value="Filter">
     </p>
 </form>
@@ -25,6 +31,7 @@ ViewData["Title"] = "Index";
     <thead>
         <tr>
             <th>
+                <!--TODO: here-->
                 @Html.DisplayNameFor(model => model.Movies![0].Title)
             </th>
             <th>
@@ -39,7 +46,10 @@ ViewData["Title"] = "Index";
             <th>
                 @Html.DisplayNameFor(model => model.Movies![0].Rating)
             </th>
-            <th></th>
+
+            <th>
+
+            </th>
         </tr>
     </thead>
     <tbody>

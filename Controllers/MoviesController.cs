@@ -12,47 +12,84 @@ namespace MvcMovie.Controllers
 {
     public class MoviesController : Controller
     {
+        // _context: store context of database
         private readonly MvcMovieContext _context;
 
+        // constructor receive an argu type MvcMovieContext and assign to
+        // context
         public MoviesController(MvcMovieContext context)
         {
             _context = context;
         }
 
+        // Task: Represents an asynchronous operation that can return a value
         // GET: Movies
         public async Task<IActionResult> Index(string movieGenre, string searchString)
         {
+            // more about _context in Data/MvcMovieContext
             if (_context.Movie == null)
             {
+                // concise way to return structured error information from
+                // ASP.NET MVC controllers
                 return Problem("Entity set 'MvcMovieContext.Movie' is null.");
             }
 
-            // use linq to get list of genres
+            // use LINQ to get list of genres
+            // IQueryable: Provides functionality to evaluate queries against a
+            // specific data source wherein the type of the data is known
+            /*
+               from m
+               in _context.Movie
+               order by m.Genre
+               select m.Genre
+
+               => return a list of all genres
+            */
             IQueryable<string> genreQuery = from m in _context.Movie orderby m.Genre select m.Genre;
 
+            /*
+               from m
+               in _context.Movie
+               select m
+
+               => return a list of all movies
+            */
             var movies = from m in _context.Movie select m;
 
+            // if the searchString query is provided (from a search input)
             if (!String.IsNullOrEmpty(searchString))
             {
-                // lambda expression
-                // contains method is run on the database, not the c# code
-                // on sql server, Contains maps to SQL LIKE, which is case insensitive
-                // SQLite with the default collaction is a mixture of case sensitive
-                // and case insensitive
+                // filter movies if title contain search string query
                 movies = movies.Where(s => s.Title!.ToUpper().Contains(searchString.ToUpper()));
             }
 
+            // if the movieGenre query is provided (from a dropdown select)
             if (!string.IsNullOrEmpty(movieGenre))
             {
+                // filter movies if movie's genre match the genre query
                 movies = movies.Where(x => x.Genre == movieGenre);
             }
 
+            // init an object MovieGenreViewModel contains 2 properties
             var movieGenreVM = new MovieGenreViewModel
             {
+                // Genres prop is a SelectList type
+                // SelectList: Represents a list that lets users select a single
+                // item\. This class is typically rendered as an HTML <select>
+                // element with the specified collection of `SelectListItem`
+                // objects
+                // the genreQuery.Distinct().ToListAsync()) execute LINQ to get
+                // a list of Genres, remove duplicate and turn it into a SelectList
                 Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
+                // turn movies into a normal List
+                // use await to ensure that any asynchronous operations have completed before calling another method on this context
+                // ToListAsync return a Task that represent the async operation
+                // the Task result contain a List<T> that contain an element
+                // from the input sequence
                 Movies = await movies.ToListAsync()
             };
 
+            // pass that new model to the View
             return View(movieGenreVM);
         }
 
