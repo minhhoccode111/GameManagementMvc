@@ -1,4 +1,4 @@
-<!-- extract the movieGenreVM type MovieGenreViewModel is being passed to the view? -->
+<!--The view declares that it expects a model of type MovieGenreViewModel-->
 @model MvcMovie.Models.MovieGenreViewModel
 
 @{
@@ -15,7 +15,8 @@ ViewData["Title"] = "Index";
 <form asp-controller="Movies" asp-action="Index" method="get">
     <p class="">
         <!--asp-for: MovieGenre is used for the key in search query-->
-        <!--asp-items: automatically generate a list of option of genres to select-->
+        <!--asp-items: automatically generate a list of option of genres to
+        select-->
         <select asp-for="MovieGenre" asp-items="Model.Genres">
             <option value="">All</option>
         </select>
@@ -31,31 +32,42 @@ ViewData["Title"] = "Index";
     <thead>
         <tr>
             <th>
-                <!--TODO: here-->
+                <!--
+                Uses the DisplayNameFor HTML helper to display the property name
+                of the Title field from the Movies collection in the model.
+                This ensures that the displayed header matches the display name
+                defined in the model or by data annotations.
+                -->
+                <!--This will display the text `Title`-->
                 @Html.DisplayNameFor(model => model.Movies![0].Title)
             </th>
             <th>
+                <!--This will display the text `ReleaseDate`-->
                 @Html.DisplayNameFor(model => model.Movies![0].ReleaseDate)
             </th>
             <th>
+                <!--This will display the text `Genre`-->
                 @Html.DisplayNameFor(model => model.Movies![0].Genre)
             </th>
             <th>
+                <!--This will display the text `Price`-->
                 @Html.DisplayNameFor(model => model.Movies![0].Price)
             </th>
             <th>
+                <!--This will display the text `Rating`-->
                 @Html.DisplayNameFor(model => model.Movies![0].Rating)
             </th>
-
-            <th>
-
-            </th>
+            <!--an extra column to display 3 links details, edit, delete-->
+            <th></th>
         </tr>
     </thead>
     <tbody>
+        <!--'!' is the null-forgiving operator, to suspress all nullable warning-->
+        <!--iterate over each movie in Movie collection from the model-->
         @foreach (var item in Model.Movies!) {
         <tr>
             <td>
+                <!--Html.DisplayFor HTML helper to display the value or the `Title` property for each movie-->
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
@@ -71,6 +83,9 @@ ViewData["Title"] = "Index";
                 @Html.DisplayFor(modelItem => item.Rating)
             </td>
             <td>
+                <!--asp-action: to go to that action route-->
+                <!--asp-route-id: to go to a specific item of that action-->
+                <!--Used <a> tag to go to that action route with GET request-->
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>

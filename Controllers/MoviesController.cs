@@ -89,7 +89,7 @@ namespace MvcMovie.Controllers
                 Movies = await movies.ToListAsync()
             };
 
-            // pass that new model to the View
+            // pass that ViewModel to the View
             return View(movieGenreVM);
         }
 
@@ -103,17 +103,22 @@ namespace MvcMovie.Controllers
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            // if no id provide
             if (id == null)
             {
                 return NotFound();
             }
 
+            // asynchronously returns the first element of a sequence, or a
+            // default value if the sequence contains no elements.
             var movie = await _context.Movie.FirstOrDefaultAsync(m => m.Id == id);
+            // if no movie match that id
             if (movie == null)
             {
                 return NotFound();
             }
 
+            // render view with found movie
             return View(movie);
         }
 
@@ -124,19 +129,28 @@ namespace MvcMovie.Controllers
         }
 
         // POST: Movies/Create
+        [HttpPost]
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
-            [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie
+            // This attribute can be used on action parameters and types
+            // to indicate model level metadata
+            // Id is auto generated?
+            [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")]
+                Movie movie
         )
         {
+            // Microsoft.AspNetCore.Mvc.ModelBinding.ModelStateDictionary ControllerBase.ModelState { get; }
             // check whether the movie has any validation errors to save in database
             if (ModelState.IsValid)
             {
+                // add submit movie to current _context
                 _context.Add(movie);
+                // save all change make in this _context to database
                 await _context.SaveChangesAsync();
+                // redirect to a specific action using actionName
+                // MoviesController.Index
                 return RedirectToAction(nameof(Index));
             }
             // if there is errors the Create method redisplay the form
@@ -144,18 +158,25 @@ namespace MvcMovie.Controllers
         }
 
         // GET: Movies/Edit/5
+        // Movies/Edit/5 is the same as Movies/Edit?id=5
         public async Task<IActionResult> Edit(int? id)
         {
+            // no id provided
             if (id == null)
             {
                 return NotFound();
             }
 
+            // find movie with that id in current context
             var movie = await _context.Movie.FindAsync(id);
+
+            // no movie found
             if (movie == null)
             {
                 return NotFound();
             }
+
+            // pass found movie to Edit View
             return View(movie);
         }
 

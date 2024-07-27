@@ -1,3 +1,5 @@
+<!--The view declares that it expects a model of type Movie-->
+<!--allow access to Movie properties in View-->
 @model MvcMovie.Models.Movie
 
 @{
@@ -46,9 +48,13 @@ ViewData["Title"] = "Edit";
 </div>
 
 <div>
+    <a asp-action="Details" asp-route-id="@Model?.Id">Details</a> | 
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> | 
     <a asp-action="Index">Back to List</a>
 </div>
 
+<!--this JS file is used jquery to display error messages if the form type does
+not match?-->
 @section Scripts {
 @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

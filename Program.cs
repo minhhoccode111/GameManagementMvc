@@ -71,7 +71,9 @@ app.UseAuthorization();
    home/ == home/index
    movies/ == movies/index
    movies/create
-   movies/delete/id
+
+   NOTE: both 'movies/delete/1' and 'movies/delete?id=1' work like the same
+   because we declare below `/{id?}`
 
    (extension) ControllerActionEndpointConventionBuilder IEndpointRouteBuilder.MapControllerRoute(string name, string pattern, [object? defaults = null], [object? constraints = null], [object? dataTokens = null])
 

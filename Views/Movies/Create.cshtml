@@ -1,20 +1,29 @@
+<!--The view declares that it expects a model of type Movie-->
 @model MvcMovie.Models.Movie
 
 @{
-    ViewData["Title"] = "Create";
+ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>@ViewData["Title"]</h1>
 
 <h4>Movie</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
+        <!--make a POST request to /Create route? I thought form's default method is GET-->
         <form asp-action="Create">
+            <!--
+            Displays a summary of validation errors.
+            Uses the text-danger class to style the text as red.
+            -->
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <!--generate a label for 'Title' property-->
                 <label asp-for="Title" class="control-label"></label>
+                <!--generate an input field for 'Title' property-->
                 <input asp-for="Title" class="form-control" />
+                <!--display validation message for title property-->
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -48,6 +57,10 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<!--
+Renders a partial view that includes client-side validation scripts.
+Ensures validation is performed on the client side.
+-->
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

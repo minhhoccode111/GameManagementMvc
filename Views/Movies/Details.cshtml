@@ -1,3 +1,4 @@
+<!--The view declares that it expects a model of type Movie-->
 @model MvcMovie.Models.Movie
 
 @{
@@ -9,11 +10,16 @@
 <div>
     <h4>Movie</h4>
     <hr />
+    <!--dl: description list html element-->
     <dl class="row">
+        <!--dt: description title-->
         <dt class = "col-sm-2">
+            <!--get the name of 'Title' property-->
             @Html.DisplayNameFor(model => model.Title)
         </dt>
+        <!--dd: description data-->
         <dd class = "col-sm-10">
+            <!--get the data of 'Title' property-->
             @Html.DisplayFor(model => model.Title)
         </dd>
         <dt class = "col-sm-2">
@@ -38,5 +44,6 @@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@Model?.Id">Delete</a> |
     <a asp-action="Index">Back to List</a>
 </div>
