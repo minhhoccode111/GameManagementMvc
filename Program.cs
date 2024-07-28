@@ -35,13 +35,18 @@ else
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-// build the app
+// build the web application
 var app = builder.Build();
 
+// Seed database initilizer
+// app.Servies: the application's configured services
+// CreateScope: create a new IServiceScope that can be used to resolve scope services
 using (var scope = app.Services.CreateScope())
 {
+    // The `IServiceProvider` used to resolve dependencies from the scope\.
     var services = scope.ServiceProvider;
 
+    // call initialize method
     SeedData.Initialize(services);
 }
 

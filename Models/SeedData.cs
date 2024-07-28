@@ -8,6 +8,8 @@ namespace MvcMovie.Models
 {
     public static class SeedData
     {
+        // IServiceProvider: Defines a mechanism for retrieving a service object
+        // that is, an object that provides custom support to other objects\.
         public static void Initialize(IServiceProvider serviceProvider)
         {
             using (
@@ -16,11 +18,19 @@ namespace MvcMovie.Models
                 )
             )
             {
-                // Look for any movies.
+                // if any movie exists
                 if (context.Movie.Any())
                 {
                     return; // DB has been seeded
                 }
+
+                // if no movie exists
+
+                // AddRange:
+                // Begins tracking the given entities, and any other reachable
+                // entities that are not already being tracked, in the
+                // `EntityState.Added` state such that they will be inserted
+                // into the database when `DbContext.SaveChanges()` is called
                 context.Movie.AddRange(
                     new Movie
                     {
@@ -55,6 +65,8 @@ namespace MvcMovie.Models
                         Price = 3.99M
                     }
                 );
+
+                // save changes make to _context
                 context.SaveChanges();
             }
         }

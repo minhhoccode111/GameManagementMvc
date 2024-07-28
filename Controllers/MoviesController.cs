@@ -181,75 +181,111 @@ namespace MvcMovie.Controllers
         }
 
         // POST: Movies/Edit/5
+        [HttpPost]
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(
+            // this 'id' is from the URL parameter
             int id,
-            [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie
+            // what is this movie? is it created from data of the submit from?
+            // or it the movie model we found from the current _context
+            [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")]
+                Movie movie
         )
         {
+            // if 'id' mismatch
             if (id != movie.Id)
             {
                 return NotFound();
             }
 
+            // if form's ModelState is valid
             if (ModelState.IsValid)
             {
                 try
                 {
+                    // try to update the movie
                     _context.Update(movie);
+                    // try to save new context
                     await _context.SaveChangesAsync();
                 }
+                // DbUpdateConcurrencyException:
+                // An exception that is thrown when a concurrency violation is
+                // encountered while saving to the database\. A concurrency
+                // violation occurs when an unexpected number of rows are
+                // affected during save\. This is usually because the data in
+                // the database has been modified since it was loaded into
+                // memory
                 catch (DbUpdateConcurrencyException)
                 {
+                    // if _context.Movie.Any(e => e.Id == id);
                     if (!MovieExists(movie.Id))
                     {
                         return NotFound();
                     }
                     else
                     {
+                        // if current context have a movie with 'id' but somehow
+                        // we can't update
                         throw;
                     }
                 }
+
+                // redirect to Index
                 return RedirectToAction(nameof(Index));
             }
+
+            // form ModelState is not valid
             return View(movie);
         }
 
         // GET: Movies/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
+            // if no id provided
             if (id == null)
             {
                 return NotFound();
             }
 
+            // find the fix movie with privided id in current _context
             var movie = await _context.Movie.FirstOrDefaultAsync(m => m.Id == id);
+
+            // if no movie found
             if (movie == null)
             {
                 return NotFound();
             }
 
+            // render view with found movie
             return View(movie);
         }
 
         // POST: Movies/Delete/5
         [HttpPost, ActionName("Delete")]
+        // if the validation of anti-forgery-token fail, the action will not execute
         [ValidateAntiForgeryToken]
+        // the id must be provided
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            // find the first movie model in current context
             var movie = await _context.Movie.FindAsync(id);
+
+            // if movie found
             if (movie != null)
             {
+                // remove that movie from current _context
                 _context.Movie.Remove(movie);
             }
 
+            // save current _context after removing
             await _context.SaveChangesAsync();
+            // redirect to Index
             return RedirectToAction(nameof(Index));
         }
 
+        // check if any movie in Movie Model in current _context match the provided 'id'
         private bool MovieExists(int id)
         {
             return _context.Movie.Any(e => e.Id == id);
